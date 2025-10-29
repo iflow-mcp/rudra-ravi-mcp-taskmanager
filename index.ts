@@ -1,4 +1,5 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
@@ -585,4 +586,50 @@ ${
         "Task deleted successfully.\n" + this.formatTaskProgressTable(requestId),
     };
   }
+}
+
+// Main execution
+async function main() {
+  const server = new Server(
+    {
+      name: "mcp-taskmanager",
+      version: "1.0.2",
+    },
+    {
+      capabilities: {
+        tools: {},
+      },
+    }
+  );
+
+  const taskManager = new TaskManagerServer();
+
+  // Set up MCP server handlers
+  server.setRequestHandler(ListToolsRequestSchema, async () => {
+    const tools = await taskManager.listTools();
+    return { tools };
+  });
+
+  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    const result = await taskManager.callTool(request.params.name, request.params.arguments);
+    return {
+      content: [
+        {
+          type: "text",
+          text: typeof result === 'string' ? result : JSON.stringify(result, null, 2),
+        },
+      ],
+    };
+  });
+
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+}
+
+// Check if this module is being run directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((error) => {
+    console.error("Server error:", error);
+    process.exit(1);
+  });
 }

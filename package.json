@@ -1,5 +1,5 @@
 {
-	"name": "@rudra-ravi/mcp-taskmanager",
+	"name": "@iflow-mcp/mcp-taskmanager",
 	"version": "1.0.2",
 	"description": "Model Context Protocol server for Task Management",
 	"author": "Ravikumar E <ravikumar@ravikumar-dev.me>",
