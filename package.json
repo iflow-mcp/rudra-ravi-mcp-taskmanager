@@ -1,6 +1,6 @@
 {
 	"name": "@iflow-mcp/mcp-taskmanager",
-	"version": "1.0.2",
+	"version": "1.0.5",
 	"description": "Model Context Protocol server for Task Management",
 	"author": "Ravikumar E <ravikumar@ravikumar-dev.me>",
 	"main": "dist/index.js",
